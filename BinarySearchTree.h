@@ -18,6 +18,7 @@ private:
     };
     BinaryNode* root;
     unsigned long size;
+    int d = 0;
 
     // Helper recursive function to destroy the tree.
     void destroy(BinaryNode* &n) {
@@ -39,18 +40,21 @@ private:
     }
 
     // Helper recursive function to find a value in the tree.
-    bool find(const Comparable &c, BinaryNode* n) const {
+    bool find(const Comparable &c, BinaryNode* n, int &depth) const {
         if (n == nullptr) {
             // Reached a dead end. Value not in tree.
             return false;
         }
+        depth++;
+
         if (c < n->value) {
             // Value is less than current node. Go to node's left child.
-            return find(c, n->leftChild);
+            return find(c, n->leftChild, depth);
         }
+
         if (n->value < c) {
             // Value is greater than current node. Go to node's right child.
-            return find(c, n->rightChild);
+            return find(c, n->rightChild, depth);
         }
         // If code reaches here, c == n->value. Node found!
         return true;
@@ -146,9 +150,10 @@ public:
         return (root == nullptr);
     }
 
-    bool find(const Comparable &c) const {
+    bool find(const Comparable &c, int &depth) const {
+        depth = 0; // Initializes Depth
         // calls private helper function
-        return find(c, root);
+        return find(c, root, depth);
     }
 
     bool add(const Comparable &c) {
